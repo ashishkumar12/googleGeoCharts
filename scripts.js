@@ -1,63 +1,61 @@
 google.load('visualization', '1', {'packages': ['geochart','geomap']});
+var colorArray = [];
+
 var googleMap = (function(){
   return{
     initMap : function(){
       var data = google.visualization.arrayToDataTable([
         ['State Code', 'State','race_state'],
         ['IN-AP',	'Andhra Pradesh',1],
-        ['IN-AR',	'Arunachal Pradesh',1],
-        ['IN-AS',	'Assam',1],
-        ['IN-BR',	'Bihar',1],
-        ['IN-CT',	'Chhattisgarh',1],
-        ['IN-GA',	'Goa',1],
-        ['IN-GJ',	'Gujarat',1],
-        ['IN-HR',	'Haryana',1],
+        ['IN-AR',	'Arunachal Pradesh',2],
+        ['IN-AS',	'Assam',3],
+        ['IN-BR',	'Bihar',4],
+        ['IN-CT',	'Chhattisgarh',5],
+        ['IN-GA',	'Goa',6],
+        ['IN-GJ',	'Gujarat',7],
+        ['IN-HR',	'Haryana',8],
         ['IN-HP',	'Himachal Pradesh',1],
-        ['IN-JK',	'Jammu and Kashmir',1],
-        ['IN-JH',	'Jharkhand',1],
-        ['IN-KA',	'Karnataka',1],
-        ['IN-KL',	'Kerala',1],
-        ['IN-MP',	'Madhya Pradesh',1],
-        ['IN-MH',	'Maharashtra',1],
-        ['IN-MN',	'Manipur',1],
-        ['IN-ML',	'Meghalaya',1],
-        ['IN-MZ',	'Mizoram',1],
-        ['IN-NL',	'Nagaland',1],
-        ['IN-OR',	'Odisha',1],
-        ['IN-PB',	'Punjab',1],
-        ['IN-RJ',	'Rajasthan',1],
-        ['IN-SK',	'Sikkim',1],
-        ['IN-TN',	'Tamil Nadu',1],
-        ['IN-TG',	'Telangana',1],
-        ['IN-TR',	'Tripura',1],
-        ['IN-UT',	'Uttarakhand',1],
-        ['IN-UP',	'Uttar Pradesh',1],
-        ['IN-WB',	'West Bengal',1],
-        ['IN-AN',	'Andaman and Nicobar Islands',1],
-        ['IN-CH',	'Chandigarh',1],
-        ['IN-DN',	'Dadra and Nagar Haveli',1],
-        ['IN-DD',	'Daman and Diu',1],
-        ['IN-DL',	'Delhi',1],
-        ['IN-LD',	'Lakshadweep',1],
-        ['IN-PY',	'Puducherry',1]
+        ['IN-JK',	'Jammu and Kashmir',10],
+        ['IN-JH',	'Jharkhand',11],
+        ['IN-KA',	'Karnataka',12],
+        ['IN-KL',	'Kerala',13],
+        ['IN-MP',	'Madhya Pradesh',14],
+        ['IN-MH',	'Maharashtra',15],
+        ['IN-MN',	'Manipur',16],
+        ['IN-ML',	'Meghalaya',17],
+        ['IN-MZ',	'Mizoram',18],
+        ['IN-NL',	'Nagaland',19],
+        ['IN-OR',	'Odisha',20],
+        ['IN-PB',	'Punjab',21],
+        ['IN-RJ',	'Rajasthan',22],
+        ['IN-SK',	'Sikkim',23],
+        ['IN-TN',	'Tamil Nadu',24],
+        ['IN-TG',	'Telangana',25],
+        ['IN-TR',	'Tripura',26],
+        ['IN-UT',	'Uttarakhand',27],
+        ['IN-UP',	'Uttar Pradesh',28],
+        ['IN-WB',	'West Bengal',29],
+        ['IN-AN',	'Andaman and Nicobar Islands',30],
+        ['IN-CH',	'Chandigarh',31],
+        ['IN-DN',	'Dadra and Nagar Haveli',32],
+        ['IN-DD',	'Daman and Diu',33],
+        ['IN-DL',	'Delhi',34],
+        ['IN-LD',	'Lakshadweep',35],
+        ['IN-PY',	'Puducherry',36]
       ]);
-
+      console.log(colorArray);
       var options = {
-        backgroundColor: {fill:'#000',stroke:'#000' ,strokeWidth:25 },
-        colorAxis:  {minValue: 1,maxValue: 2,colors: ['#f5f5f5', 'grey', '#f5f5f5']},
+        // backgroundColor: {fill:'#000',stroke:'#000' ,strokeWidth:25 },
+        // colorAxis:  {colors: colorArray},
         legend: 'none',
         backgroundColor: {fill:'#fff',stroke:'#fff' ,strokeWidth:25 },
-        datalessRegionColor: '#fff',
+        datalessRegionColor: '#000',
         displayMode: 'regions',
         dataMode : 'regions',
-        enableRegionInteractivity: 'true',
         resolution: 'provinces',
-        sizeAxis: {minValue: 1, maxValue:1,minSize:10,  maxSize: 10},
         region:'IN',
         keepAspectRatio: true,
-        useMapTypeControl : true,
-        showInfoWindow: true,
-        tooltip: {textStyle: {color: '#444444'}, trigger:'focus', isHtml: false}
+        showInfoWindow: true
       };
 
       var geochart = new google.visualization.GeoChart(
@@ -65,9 +63,24 @@ var googleMap = (function(){
         geochart.draw(data, options);
         google.visualization.events.addListener(geochart, 'regionClick', function(resp) {
           geochart.setSelection(getSelection());
-          window.location = 'www.yourURL.com/route/'+resp['region'];
+          var route = resp['region'];
+          if(route.slice(0,2) == 'IN'){
+            // console.log(route);
+            window.location = 'www.yourURL.com/route/'+route;
+          }else{
+            return null;
+          }
         });
+      },
+      generateColor : function(){
+        while(colorArray.length < 36){
+          var colorcode = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
+          if(colorArray.indexOf(colorcode) < 0 ){
+            colorArray.push(colorcode);
+          }
+        }
+        google.setOnLoadCallback(googleMap.initMap);
       }
     }
   })();
-  google.setOnLoadCallback(googleMap.initMap);
+  googleMap.generateColor();
